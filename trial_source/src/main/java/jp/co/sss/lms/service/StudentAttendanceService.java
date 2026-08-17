@@ -43,7 +43,26 @@ public class StudentAttendanceService {
 	private LoginUserDto loginUserDto;
 	@Autowired
 	private TStudentAttendanceMapper tStudentAttendanceMapper;
-
+	
+	/*
+	 @Autowired
+	private TrainingTime trainingGime;
+	@Autowired
+	private MLmsUserMapper mLmsUserMapper;
+	@Autowired  
+	MPlaceMapper mPlaceMapper;
+	@Autowired
+	private TCompanyAttendanceMapper tCompanyAttendanceMapper;
+	@Autowired
+	private TUserPlaceMapper tUserPlaceMapper;
+	@Autowired
+	private PlaceService placaService;
+	@Autowired
+	private CourseService courseService;
+	@Autowired
+	private CompanyService companyService;
+	*/
+	
 	/**
 	 * 勤怠一覧情報取得
 	 * 
@@ -51,8 +70,7 @@ public class StudentAttendanceService {
 	 * @param lmsUserId
 	 * @return 勤怠管理画面用DTOリスト
 	 */
-	public List<AttendanceManagementDto> getAttendanceManagement(Integer courseId,
-			Integer lmsUserId) {
+	public List<AttendanceManagementDto> getAttendanceManagement(Integer courseId , Integer lmsUserId) {
 
 		// 勤怠管理リストの取得
 		List<AttendanceManagementDto> attendanceManagementDtoList = tStudentAttendanceMapper
@@ -333,5 +351,25 @@ public class StudentAttendanceService {
 		// 完了メッセージ
 		return messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
 	}
+	
+	
+	public boolean notEnterCheck() throws ParseException {
+		//今日の日付を取得
+		Date date = new Date();
+		Date trainingDate = attendanceUtil.getTrainingDate();
+	
+		Integer lmsUserId =  loginUserDto.getLmsUserId();
+		int notEnterCount = tStudentAttendanceMapper.notEnterCount
+				(lmsUserId, Constants.DB_FLG_FALSE, trainingDate);
+		
+		System.out.println("★★★未入力★★★"+ notEnterCount);
+		
+		if (notEnterCount > 0) {
+			return true;
+		}
+		return false ;
+	}
+	
+	
 
 }

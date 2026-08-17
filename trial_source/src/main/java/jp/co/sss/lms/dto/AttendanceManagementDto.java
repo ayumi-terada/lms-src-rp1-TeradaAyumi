@@ -13,6 +13,8 @@ import lombok.EqualsAndHashCode;
 @Component
 @Data
 @EqualsAndHashCode(callSuper = true)
+//親クラスが持っている値も同等に扱うという意味
+
 public class AttendanceManagementDto extends StudentAttendanceDto {
 
 	/** 当日フラグ */
