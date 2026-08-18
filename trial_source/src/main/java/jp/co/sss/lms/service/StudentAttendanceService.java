@@ -43,7 +43,7 @@ public class StudentAttendanceService {
 	private LoginUserDto loginUserDto;
 	@Autowired
 	private TStudentAttendanceMapper tStudentAttendanceMapper;
-	
+
 	/*
 	 @Autowired
 	private TrainingTime trainingGime;
@@ -61,8 +61,8 @@ public class StudentAttendanceService {
 	private CourseService courseService;
 	@Autowired
 	private CompanyService companyService;
-	*/
-	
+	 */
+
 	/**
 	 * 勤怠一覧情報取得
 	 * 
@@ -70,7 +70,7 @@ public class StudentAttendanceService {
 	 * @param lmsUserId
 	 * @return 勤怠管理画面用DTOリスト
 	 */
-	public List<AttendanceManagementDto> getAttendanceManagement(Integer courseId , Integer lmsUserId) {
+	public List<AttendanceManagementDto> getAttendanceManagement(Integer courseId, Integer lmsUserId) {
 
 		// 勤怠管理リストの取得
 		List<AttendanceManagementDto> attendanceManagementDtoList = tStudentAttendanceMapper
@@ -114,14 +114,14 @@ public class StudentAttendanceService {
 		switch (attendanceType) {
 		case Constants.CODE_VAL_ATWORK:
 			if (tStudentAttendance != null
-					&& !tStudentAttendance.getTrainingStartTime().equals("")) {
+			&& !tStudentAttendance.getTrainingStartTime().equals("")) {
 				// 本日の勤怠情報は既に入力されています。直接編集してください。
 				return messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_PUNCHALREADYEXISTS);
 			}
 			break;
 		case Constants.CODE_VAL_LEAVING:
 			if (tStudentAttendance == null
-					|| tStudentAttendance.getTrainingStartTime().equals("")) {
+			|| tStudentAttendance.getTrainingStartTime().equals("")) {
 				// 出勤情報がないため退勤情報を入力出来ません。
 				return messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_PUNCHINEMPTY);
 			}
@@ -241,7 +241,7 @@ public class StudentAttendanceService {
 		// 途中退校している場合のみ設定
 		if (loginUserDto.getLeaveDate() != null) {
 			attendanceForm
-					.setLeaveDate(dateUtil.dateToString(loginUserDto.getLeaveDate(), "yyyy-MM-dd"));
+			.setLeaveDate(dateUtil.dateToString(loginUserDto.getLeaveDate(), "yyyy-MM-dd"));
 			attendanceForm.setDispLeaveDate(
 					dateUtil.dateToString(loginUserDto.getLeaveDate(), "yyyy年M月d日"));
 		}
@@ -250,11 +250,11 @@ public class StudentAttendanceService {
 		for (AttendanceManagementDto attendanceManagementDto : attendanceManagementDtoList) {
 			DailyAttendanceForm dailyAttendanceForm = new DailyAttendanceForm();
 			dailyAttendanceForm
-					.setStudentAttendanceId(attendanceManagementDto.getStudentAttendanceId());
+			.setStudentAttendanceId(attendanceManagementDto.getStudentAttendanceId());
 			dailyAttendanceForm
-					.setTrainingDate(dateUtil.toString(attendanceManagementDto.getTrainingDate()));
+			.setTrainingDate(dateUtil.toString(attendanceManagementDto.getTrainingDate()));
 			dailyAttendanceForm
-					.setTrainingStartTime(attendanceManagementDto.getTrainingStartTime());
+			.setTrainingStartTime(attendanceManagementDto.getTrainingStartTime());
 			dailyAttendanceForm.setTrainingEndTime(attendanceManagementDto.getTrainingEndTime());
 			if (attendanceManagementDto.getBlankTime() != null) {
 				dailyAttendanceForm.setBlankTime(attendanceManagementDto.getBlankTime());
@@ -301,7 +301,7 @@ public class StudentAttendanceService {
 			BeanUtils.copyProperties(dailyAttendanceForm, tStudentAttendance);
 			// 研修日付
 			tStudentAttendance
-					.setTrainingDate(dateUtil.parse(dailyAttendanceForm.getTrainingDate()));
+			.setTrainingDate(dateUtil.parse(dailyAttendanceForm.getTrainingDate()));
 			// 現在の勤怠情報リストのうち、研修日が同じものを更新用エンティティで上書き
 			for (TStudentAttendance entity : tStudentAttendanceList) {
 				if (entity.getTrainingDate().equals(tStudentAttendance.getTrainingDate())) {
@@ -351,25 +351,22 @@ public class StudentAttendanceService {
 		// 完了メッセージ
 		return messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
 	}
-	
-	
+
+	/**
+	 * @return
+	 * @throws ParseException
+	 */
 	public boolean notEnterCheck() throws ParseException {
 		//今日の日付を取得
 		Date date = new Date();
 		Date trainingDate = attendanceUtil.getTrainingDate();
-	
-		Integer lmsUserId =  loginUserDto.getLmsUserId();
-		int notEnterCount = tStudentAttendanceMapper.notEnterCount
-				(lmsUserId, Constants.DB_FLG_FALSE, trainingDate);
-		
-		System.out.println("★★★未入力★★★"+ notEnterCount);
-		
+
+		Integer lmsUserId = loginUserDto.getLmsUserId();
+		int notEnterCount = tStudentAttendanceMapper.notEnterCount(lmsUserId, Constants.DB_FLG_FALSE, trainingDate);
+
 		if (notEnterCount > 0) {
 			return true;
 		}
-		return false ;
+		return false;
 	}
-	
-	
-
 }
