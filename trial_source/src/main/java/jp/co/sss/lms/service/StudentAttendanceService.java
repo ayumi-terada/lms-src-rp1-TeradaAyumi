@@ -43,25 +43,8 @@ public class StudentAttendanceService {
 	private LoginUserDto loginUserDto;
 	@Autowired
 	private TStudentAttendanceMapper tStudentAttendanceMapper;
-
-	/*
-	 @Autowired
-	private TrainingTime trainingGime;
-	@Autowired
-	private MLmsUserMapper mLmsUserMapper;
-	@Autowired  
-	MPlaceMapper mPlaceMapper;
-	@Autowired
-	private TCompanyAttendanceMapper tCompanyAttendanceMapper;
-	@Autowired
-	private TUserPlaceMapper tUserPlaceMapper;
-	@Autowired
-	private PlaceService placaService;
-	@Autowired
-	private CourseService courseService;
-	@Autowired
-	private CompanyService companyService;
-	 */
+	//@Autowired
+	//private AttendanceForm attendanceForm;
 
 	/**
 	 * 勤怠一覧情報取得
@@ -114,14 +97,14 @@ public class StudentAttendanceService {
 		switch (attendanceType) {
 		case Constants.CODE_VAL_ATWORK:
 			if (tStudentAttendance != null
-			&& !tStudentAttendance.getTrainingStartTime().equals("")) {
+					&& !tStudentAttendance.getTrainingStartTime().equals("")) {
 				// 本日の勤怠情報は既に入力されています。直接編集してください。
 				return messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_PUNCHALREADYEXISTS);
 			}
 			break;
 		case Constants.CODE_VAL_LEAVING:
 			if (tStudentAttendance == null
-			|| tStudentAttendance.getTrainingStartTime().equals("")) {
+					|| tStudentAttendance.getTrainingStartTime().equals("")) {
 				// 出勤情報がないため退勤情報を入力出来ません。
 				return messageUtil.getMessage(Constants.VALID_KEY_ATTENDANCE_PUNCHINEMPTY);
 			}
@@ -238,10 +221,16 @@ public class StudentAttendanceService {
 		attendanceForm.setLeaveFlg(loginUserDto.getLeaveFlg());
 		attendanceForm.setBlankTimes(attendanceUtil.setBlankTime());
 
+		
+		// -task26- 寺田あゆみ
+		//時間マップと分マップを取得
+		attendanceForm.setHours(attendanceUtil.getHour());
+		attendanceForm.setMinutes(attendanceUtil.getMinute());
+
 		// 途中退校している場合のみ設定
 		if (loginUserDto.getLeaveDate() != null) {
 			attendanceForm
-			.setLeaveDate(dateUtil.dateToString(loginUserDto.getLeaveDate(), "yyyy-MM-dd"));
+					.setLeaveDate(dateUtil.dateToString(loginUserDto.getLeaveDate(), "yyyy-MM-dd"));
 			attendanceForm.setDispLeaveDate(
 					dateUtil.dateToString(loginUserDto.getLeaveDate(), "yyyy年M月d日"));
 		}
@@ -250,12 +239,19 @@ public class StudentAttendanceService {
 		for (AttendanceManagementDto attendanceManagementDto : attendanceManagementDtoList) {
 			DailyAttendanceForm dailyAttendanceForm = new DailyAttendanceForm();
 			dailyAttendanceForm
-			.setStudentAttendanceId(attendanceManagementDto.getStudentAttendanceId());
+					.setStudentAttendanceId(attendanceManagementDto.getStudentAttendanceId());
 			dailyAttendanceForm
-			.setTrainingDate(dateUtil.toString(attendanceManagementDto.getTrainingDate()));
+					.setTrainingDate(dateUtil.toString(attendanceManagementDto.getTrainingDate()));
 			dailyAttendanceForm
-			.setTrainingStartTime(attendanceManagementDto.getTrainingStartTime());
+					.setTrainingStartTime(attendanceManagementDto.getTrainingStartTime());
 			dailyAttendanceForm.setTrainingEndTime(attendanceManagementDto.getTrainingEndTime());
+
+			// -task26- 寺田あゆみ
+			//出勤・退勤の時間と分を取得
+			//dailyAttendanceForm.setTainingStartHours(attendanceManagementDto.getTrainingStartHours());
+			
+			
+			
 			if (attendanceManagementDto.getBlankTime() != null) {
 				dailyAttendanceForm.setBlankTime(attendanceManagementDto.getBlankTime());
 				dailyAttendanceForm.setBlankTimeValue(String.valueOf(
@@ -301,7 +297,7 @@ public class StudentAttendanceService {
 			BeanUtils.copyProperties(dailyAttendanceForm, tStudentAttendance);
 			// 研修日付
 			tStudentAttendance
-			.setTrainingDate(dateUtil.parse(dailyAttendanceForm.getTrainingDate()));
+					.setTrainingDate(dateUtil.parse(dailyAttendanceForm.getTrainingDate()));
 			// 現在の勤怠情報リストのうち、研修日が同じものを更新用エンティティで上書き
 			for (TStudentAttendance entity : tStudentAttendanceList) {
 				if (entity.getTrainingDate().equals(tStudentAttendance.getTrainingDate())) {
@@ -369,4 +365,13 @@ public class StudentAttendanceService {
 		}
 		return false;
 	}
+
+	public void formatConversion(AttendanceForm attendanceForm) {
+
+		attendanceForm.setLmsUserId(loginUserDto.getLmsUserId());
+		attendanceForm.setUserName(loginUserDto.getUserName());
+		attendanceForm.setLeaveFlg(loginUserDto.getLeaveFlg());
+
+	}
+
 }
