@@ -1,7 +1,5 @@
 package jp.co.sss.lms.form;
 
-import java.util.List;
-
 import lombok.Data;
 
 /**
@@ -25,13 +23,13 @@ public class DailyAttendanceForm {
 	
 	// -task26- 寺田あゆみ
 	/** 出勤時間(時) */
-	private List<DailyAttendanceForm> trainingStartHours;
+	private String trainingStartHours;
 	/** 出勤時間(分) */
-	private List<DailyAttendanceForm> trainingStartMinutes;	
+	private String trainingStartMinutes;	
 	/** 退勤時間(時) */
-	private List<DailyAttendanceForm> trainingEndtHours;
+	private String trainingEndHours;
 	/** 退勤時間(分) */
-	private List<DailyAttendanceForm> trainingEndtMinutes;
+	private String trainingEndMinutes;
 	
 	
 	/** 中抜け時間 */

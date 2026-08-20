@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
+import jp.co.sss.lms.dto.StudentAttendanceDto;
 import jp.co.sss.lms.entity.TStudentAttendance;
 import jp.co.sss.lms.enums.AttendanceStatusEnum;
 import jp.co.sss.lms.form.AttendanceForm;
@@ -43,8 +44,8 @@ public class StudentAttendanceService {
 	private LoginUserDto loginUserDto;
 	@Autowired
 	private TStudentAttendanceMapper tStudentAttendanceMapper;
-	//@Autowired
-	//private AttendanceForm attendanceForm;
+	@Autowired
+	private StudentAttendanceDto studentAttendanceDto;
 
 	/**
 	 * 勤怠一覧情報取得
@@ -222,7 +223,7 @@ public class StudentAttendanceService {
 		attendanceForm.setBlankTimes(attendanceUtil.setBlankTime());
 
 		
-		// -task26- 寺田あゆみ
+		// task26- 
 		//時間マップと分マップを取得
 		attendanceForm.setHours(attendanceUtil.getHour());
 		attendanceForm.setMinutes(attendanceUtil.getMinute());
@@ -246,10 +247,21 @@ public class StudentAttendanceService {
 					.setTrainingStartTime(attendanceManagementDto.getTrainingStartTime());
 			dailyAttendanceForm.setTrainingEndTime(attendanceManagementDto.getTrainingEndTime());
 
-			// -task26- 寺田あゆみ
-			//出勤・退勤の時間と分を取得
-			//dailyAttendanceForm.setTainingStartHours(attendanceManagementDto.getTrainingStartHours());
-			
+			// task26- 
+			//出勤時間の時間と分を取得
+			if(attendanceManagementDto.getTrainingStartTime() != null) {
+			dailyAttendanceForm
+					.setTrainingStartHours(attendanceUtil.toHours(attendanceManagementDto.getTrainingStartTime()));
+			dailyAttendanceForm.setTrainingStartHours(String.valueOf(
+					attendanceUtil.toHours(attendanceManagementDto.getTrainingStartTime())));
+		}
+			dailyAttendanceForm.setTrainingStartMinutes(
+					attendanceUtil.toMinutes(attendanceManagementDto.getTrainingStartTime()));
+			//退勤時間の時間と分を取得
+			dailyAttendanceForm
+					.setTrainingEndHours(attendanceUtil.toHours(attendanceManagementDto.getTrainingEndTime()));
+			dailyAttendanceForm.setTrainingEndMinutes(
+					attendanceUtil.toMinutes(attendanceManagementDto.getTrainingEndTime()));
 			
 			
 			if (attendanceManagementDto.getBlankTime() != null) {
@@ -348,6 +360,7 @@ public class StudentAttendanceService {
 		return messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
 	}
 
+	// task25 - 寺田あゆみ
 	/**
 	 * @return
 	 * @throws ParseException
@@ -366,12 +379,5 @@ public class StudentAttendanceService {
 		return false;
 	}
 
-	public void formatConversion(AttendanceForm attendanceForm) {
-
-		attendanceForm.setLmsUserId(loginUserDto.getLmsUserId());
-		attendanceForm.setUserName(loginUserDto.getUserName());
-		attendanceForm.setLeaveFlg(loginUserDto.getLeaveFlg());
-
-	}
 
 }

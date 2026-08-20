@@ -120,8 +120,9 @@ public class AttendanceController {
 		// 勤怠フォームの生成
 		AttendanceForm attendanceForm = studentAttendanceService
 				.setAttendanceForm(attendanceManagementDtoList);
-		model.addAttribute("attendanceForm", attendanceForm);
-
+		model.addAttribute("attendanceForm", attendanceForm);		
+		
+		
 		return "attendance/update";
 	}
 

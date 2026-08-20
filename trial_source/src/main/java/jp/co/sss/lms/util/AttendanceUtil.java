@@ -1,7 +1,6 @@
 package jp.co.sss.lms.util;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 
@@ -180,22 +179,35 @@ public class AttendanceUtil {
 
 	}
 	
-	
 	// task26 - 寺田あゆみ
 	/**
 	 * @param date
 	 * @return sdf.format(date)
-	 */
-	public String toHours(Date date) {
+	 
+	public String toStartHours(Date date) {
 		if (date == null) {
 			return "";
 		}
 		SimpleDateFormat sdf = new SimpleDateFormat("HH");
-		
 		return sdf.format(date);
 	}
-	
-	
-	
-	
+	*/
+	//開始時間の時間を取得
+	public String toHours(String time) {
+		if (time == null || !time.contains(":")) {
+			return "";
+		}
+		String[] timeParts = time.split(":");
+		return timeParts[0];
+	}
+
+	//開始時間の分を取得
+	public String toMinutes(String time) {
+		if (time == null || !time.contains(":")) {
+			return "";
+		}
+		String[] timeParts = time.split(":");
+		return timeParts[1];
+	}
+
 }
