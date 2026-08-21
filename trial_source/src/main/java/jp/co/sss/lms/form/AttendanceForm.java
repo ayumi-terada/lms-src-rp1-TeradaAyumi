@@ -34,11 +34,8 @@ public class AttendanceForm {
 
 	// -task26 - 寺田あゆみ
 	//時間マップ、分マップ
-	private LinkedHashMap<Integer, String> hours;
+	private LinkedHashMap<String, String> hours;
 	
-	private LinkedHashMap<Integer, String> minutes;
-	
-	
-	
+	private LinkedHashMap<String, String> minutes;	
 	
 }

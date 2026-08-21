@@ -153,12 +153,13 @@ public class AttendanceUtil {
 	/**
 	 * @return map
 	 */
-	public LinkedHashMap<Integer, String> getHour() {
+	public LinkedHashMap<String, String> getHours() {
 
-		LinkedHashMap<Integer, String> map = new LinkedHashMap<Integer, String>();
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put(null, "");
 		for (int i = 0; i < 24; i++) {
-			map.put(i, String.format("%02d", i));
+			String hours = String.format("%02d", i);
+			map.put(hours,hours);
 		}
 		return map;
 	}
@@ -169,11 +170,12 @@ public class AttendanceUtil {
 	/**
 	 * @return map
 	 */
-	public LinkedHashMap<Integer, String> getMinute() {
-		LinkedHashMap<Integer, String> map = new LinkedHashMap<Integer, String>();
+	public LinkedHashMap<String, String> getMinutes() {
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put(null, "");
 		for (int i = 0; i < 60; i++) {
-			map.put(i, String.format("%02d", i));
+			String minutes = String.format("%02d", i);
+			map.put(minutes,minutes);
 		}
 		return map;
 

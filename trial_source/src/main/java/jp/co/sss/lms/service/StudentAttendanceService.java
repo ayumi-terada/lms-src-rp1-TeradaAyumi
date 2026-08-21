@@ -225,8 +225,8 @@ public class StudentAttendanceService {
 		
 		// task26- 
 		//時間マップと分マップを取得
-		attendanceForm.setHours(attendanceUtil.getHour());
-		attendanceForm.setMinutes(attendanceUtil.getMinute());
+		attendanceForm.setHours(attendanceUtil.getHours());
+		attendanceForm.setMinutes(attendanceUtil.getMinutes());
 
 		// 途中退校している場合のみ設定
 		if (loginUserDto.getLeaveDate() != null) {
@@ -262,6 +262,8 @@ public class StudentAttendanceService {
 					.setTrainingEndHours(attendanceUtil.toHours(attendanceManagementDto.getTrainingEndTime()));
 			dailyAttendanceForm.setTrainingEndMinutes(
 					attendanceUtil.toMinutes(attendanceManagementDto.getTrainingEndTime()));
+			
+			
 			
 			
 			if (attendanceManagementDto.getBlankTime() != null) {
@@ -379,5 +381,33 @@ public class StudentAttendanceService {
 		return false;
 	}
 
+	
+	// task26 - 寺田あゆみ
+	/**
+	 * @param attendanceForm
+	 */
+	public void formatConversion(AttendanceForm attendanceForm) {
+		
+		for (DailyAttendanceForm dailyAttendanceForm : attendanceForm.getAttendanceList()) {
+			if (dailyAttendanceForm.getTrainingStartHours() != null &&
+					!dailyAttendanceForm.getTrainingStartHours().isEmpty() &&
+					dailyAttendanceForm.getTrainingStartMinutes() != null &&
+					!dailyAttendanceForm.getTrainingStartMinutes().isEmpty()) {
 
+				dailyAttendanceForm.setTrainingStartTime(
+					String.format("%02d:%02d", Integer.parseInt(dailyAttendanceForm.getTrainingStartHours()),
+							Integer.parseInt(dailyAttendanceForm.getTrainingStartMinutes())));
+
+			if (dailyAttendanceForm.getTrainingEndHours() != null &&
+					!dailyAttendanceForm.getTrainingEndHours().isEmpty() &&
+					dailyAttendanceForm.getTrainingEndMinutes() != null &&
+					!dailyAttendanceForm.getTrainingEndMinutes().isEmpty()) {
+
+				dailyAttendanceForm.setTrainingEndTime(
+					String.format("%02d:%02d", Integer.parseInt(dailyAttendanceForm.getTrainingEndHours()),
+							Integer.parseInt(dailyAttendanceForm.getTrainingEndMinutes())));
+				}
+			}
+		}
+	}
 }
